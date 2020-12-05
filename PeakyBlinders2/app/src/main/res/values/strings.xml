@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Blinders or Starks</string>
+    <string name="hello_message">Hello mate, choose a family</string>
+    <string name="shelby_message">Picky Blinders- Shelby family</string>
+    <string name="stark_message">Game Of Thrones- Stark family</string>
+    <string name="button_shelby">Shelby</string>
+    <string name="button_stark">Stark</string>
+
+    <string-array name="shelbys_family">
+        <item>Tomas</item>
+        <item>Arthur</item>
+        <item>Elizabeth (Polly)</item>
+        <item>John</item>
+        <item>Finn</item>
+        <item>Ada</item>
+    </string-array>
+
+    <string-array name="starks_family">
+        <item>Eddard</item>
+        <item>Caytelyn</item>
+        <item>Robb</item>
+        <item>John Snow</item>
+        <item>Sansa</item>
+        <item>Arya</item>
+        <item>Bran</item>
+    </string-array>
+</resources>

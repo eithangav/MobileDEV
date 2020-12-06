@@ -1,9 +1,9 @@
 com/example/popupquotes/BuildConfig.java
  com.example.popupquotes.BuildConfig
-com/example/popupquotes/NotificationReciever.java
- com.example.popupquotes.NotificationReciever
 com/example/popupquotes/RepeatingActivity.java
  com.example.popupquotes.RepeatingActivity
+com/example/popupquotes/NotificationReciever.java
+ com.example.popupquotes.NotificationReciever
 com/example/popupquotes/MainActivity.java
  com.example.popupquotes.MainActivity
  com.example.popupquotes.MainActivity$1

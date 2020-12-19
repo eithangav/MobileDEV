@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pop Up Quotes</string>
+    <string name="main_button">SET NOTIFICATION EVERY 5 MIN</string>
+    <string name="alarm_message">Time has come</string>
 </resources>

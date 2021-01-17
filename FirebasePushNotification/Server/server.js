@@ -1,85 +1,52 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const https = require('https');
+const EventEmitter = require('events').EventEmitter;
 const port = 8080;
 
 const app = express();
 app.use(bodyParser.json());
 
-let companySymbol;
-
-//get requite symbol from app (/symbol-update?symbol=xxx)
-app.get('/symbol-update', (req, res) => {
-	companySymbol = req.query.symbol;
-	console.log('got new symbol from app: ${companySymbol}. activating alphavangate automatic requests.');
-	alphaVantageActivate();
-});
-
-//get aphpavantage's symbol's json and commit push notification every 15 sec
-function alphaVantageActivate(){
-	
+//an extend to EventEmmiter in order to run every 15 sec
+class EachFifteenSec extends EventEmitter{
+	start(){
+		this._id = setInterval(this.emit.bind(this,'fifteenSec'), 15000);
+	}
 }
 
+//get the required company's stock price and trigger a push notification
+function priceNotification(url){
+	https.get(url, function(res){
+		var body = '';
 
+		res.on('data', function(chunk){
+			body += chunk;
+		});
 
+		res.on('end', function(){
+			var fbResponse = JSON.parse(body);
+			var price = fbResponse["Global Quote"]["05. price"] + " $";
+			console.log("Got a response: ", price);
+		});
+	}).on('error', function(e){
+		console.log("Got an error: ", e);
+	});
+}
 
+/* get the required symbol from app (/symbol?sym=xxx), make a proper request url to alphavantage
+and run priceNotification every 15 sec */
+app.get('/symbol', (req, res) => {
 
-
-
-
-
-app.get('/tasks', (req, res) => {
-	//read the json
-	let data = fs.readFileSync('data.json', 'utf8');
-	let strData = JSON.parse(data);
-
-	//send the json to the user
-  	res.send(strData);
-});
-
-//request: add a new task
-app.get('/tasks/new', (req, res) => {
-	//store the requested task's id and content
-	let id = parseInt(req.query.id);
-	let content = req.query.task;
-
-	//read the json for editing
-	let data = fs.readFileSync('data.json', 'utf8');
-	let strData = JSON.parse(data);
-
-	//add the new requested task
-	strData.tasks.push({id: id, content: content});
-
-	//update changes in the json
-	fs.writeFileSync('data.json', JSON.stringify(strData), 'utf8');
-
-	//send the json to the user
-	res.send(strData);
-});
-
-//request: delete task by id
-app.get('/tasks/remove', (req, res) => {
-	//store the requested task's id
-	let id = parseInt(req.query.id);
-
-	//read the json for editing
-	let data = fs.readFileSync('data.json', 'utf8');
-	let strData = JSON.parse(data);
-
-	//find and remove the requested task's object by id
-	let index = strData.tasks.findIndex(x => x.id == id);
-	if (index >= 0) 
-		strData.tasks.splice(index, 1);
+	var symbol = req.query.sym;
+	var url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=EXKNMOOUTJ53YDU2`;
 	
-	//update changes in the json
-	fs.writeFileSync('data.json', JSON.stringify(strData), 'utf8');
-
-	//send the json to the user
-	res.send(strData);
+	let e = new EachFifteenSec();
+	e.on('fifteenSec', function(){
+		priceNotification(url)
+	});
+	e.start();
 });
 
 app.listen(port, () => {
   console.log(`App is listening at http://localhost:${port}`)
 });
-
-
-

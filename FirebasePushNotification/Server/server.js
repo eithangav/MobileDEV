@@ -1,3 +1,8 @@
+/**
+ * This is a server to create app push notification with the current price of a stock
+ * that the user of the app wants, every 15 seconds
+ */
+
 "use strict";
 
 const express = require('express');
@@ -10,6 +15,8 @@ const PORT = 8080;
 const ALPHA_VANTAGE_API_KEY = 'EXKNMOOUTJ53YDU2'
 const app = express();
 app.use(bodyParser.json());
+
+//admin initializer
 admin.initializeApp({
     credential: admin.credential.cert({
         projectId: 'fir-pushnotification-8f6fb',
@@ -18,6 +25,7 @@ admin.initializeApp({
     })
 });
 
+//an array to store user's tokens (not really necessary in our case)
 let tokens = [];
 
 //an extend to EventEmmiter in order to run every 15 seconds
@@ -27,6 +35,7 @@ class EachFifteenSec extends EventEmitter{
 	}
 }
 
+//an event, to get a request from the app code
 app.get('/fire', (req, res) => {
 	let token = req.query.token;
 	let symbol = req.query.symbol;
@@ -39,24 +48,30 @@ app.get('/fire', (req, res) => {
 	tokens[user] = token;
 	console.log(tokens);
 
+	//to run every 15 sec from now on:
 	let e = new EachFifteenSec();
 	e.on('fifteenSec', function(){
+		//the request url to get the required data from Alpha Vantage website
 		let url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${ALPHA_VANTAGE_API_KEY}`;
 
+		//a request to the website
 		https.get(url, function(res){
+			//build the json output
 			let body = '';
-
 			res.on('data', function(chunk){
 				body += chunk;
 			});
 
+			//json is finished, read it
 			res.on('end', function(){
 				let fbResponse = JSON.parse(body);
 				if (fbResponse["Global Quote"] != undefined){
+					//get the required price out of the json
 					let price = fbResponse["Global Quote"]["05. price"] + "$";
 					console.log(`price update for ${user}: ${price}`);
 					console.log(`further notification vars: user =${user} token=${token} symbol=${symbol} price=${price}`);
 
+					//a message to send to the user as a notification
 					var message = {
 						notification: {
 							title: `${symbol} stock price update`,
@@ -90,6 +105,7 @@ app.get('/fire', (req, res) => {
     res.status(200).json({msg: "ok"});
 });
 
+//listener
 app.listen(PORT, () => {
 	console.log(`App is listening at http://localhost:${PORT}`)
 });

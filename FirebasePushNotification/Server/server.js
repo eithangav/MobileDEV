@@ -4,12 +4,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const https = require('https');
 const EventEmitter = require('events').EventEmitter;
-// const FCM = require('fcm-push');
 const admin = require('firebase-admin');
 
 const PORT = 8080;
 const ALPHA_VANTAGE_API_KEY = 'EXKNMOOUTJ53YDU2'
-const FCM_SERVER_KEY = 'AAAAOUoA3z0:APA91bE75gGtdW2IoMKCw3cQL5mpB1WSpgFoX7PM4sfvoOk1X1_-uaibuJheynNpAxT3JczNtHxbQphyLSqGHZypcynlyomFB7J2iomfuYTaNABnxVmX1nPOUsAEf2kIt26lYL61WbKR';
 const app = express();
 app.use(bodyParser.json());
 admin.initializeApp({
@@ -20,7 +18,6 @@ admin.initializeApp({
     })
 });
 
-// let fcm = new FCM(FCM_SERVER_KEY);
 let tokens = [];
 
 //an extend to EventEmmiter in order to run every 15 seconds
@@ -67,7 +64,6 @@ app.get('/fire', (req, res) => {
 						},
 						android: {
 							notification: {
-							  icon: 'stock_ticker_update',
 							  color: '#7e55c3'
 							},
 						},
@@ -90,6 +86,8 @@ app.get('/fire', (req, res) => {
 		});
 	});
 	e.start();
+	
+    res.status(200).json({msg: "ok"});
 });
 
 app.listen(PORT, () => {

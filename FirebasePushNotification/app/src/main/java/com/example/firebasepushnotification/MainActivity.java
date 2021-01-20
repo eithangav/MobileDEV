@@ -85,9 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG,error.getMessage());
                     }
                 });
-
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-
 }

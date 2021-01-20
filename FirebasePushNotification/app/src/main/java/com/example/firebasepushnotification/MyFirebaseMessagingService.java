@@ -21,13 +21,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     /**
      * Called when a message is received.
-     * @param remoteMessage
+     * @param remoteMessage the message Object
      */
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-//        super.onMessageReceived(remoteMessage);
 
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "Received a massage from: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -56,23 +55,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         Log.d("NEW_TOKEN", s);
-//        FirebaseMessaging.getInstance().getToken()
-//                .addOnCompleteListener(new OnCompleteListener<String>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<String> task) {
-//                        if (!task.isSuccessful()) {
-//                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-//                            return;
-//                        }
-//
-//                        // Get new FCM registration token
-//                        String token = task.getResult();
-//
-//                        // Log and toast
-//                        String msg = getString(R.string.msg_token_fmt, token);
-//                        Log.d(TAG, msg);
-//                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
     }
 }

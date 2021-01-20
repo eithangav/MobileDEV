@@ -35,7 +35,7 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Example: IBM"
+        android:text="IBM"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,5 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="requiredSymbol" />
+        app:constraint_referenced_ids="requiredSymbol"
+        tools:layout_editor_absoluteY="102dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
